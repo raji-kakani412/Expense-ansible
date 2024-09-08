@@ -1,6 +1,6 @@
 - name: install mysql server
   hosts: mysql
-  become:yes 
+  become: yes 
 
   tasks:
   - name: installing mysql server
