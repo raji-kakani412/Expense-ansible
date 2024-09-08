@@ -1,0 +1,3 @@
+- name: backend server
+  hosts: backend
+  become: yes
