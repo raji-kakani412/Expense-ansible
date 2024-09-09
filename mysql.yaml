@@ -8,7 +8,7 @@
 
 
   tasks:
-  - name: ansible install boto3 and botocore
+  - name: ansible install PyMySQL
     ansible.builtin.pip:
       name: 
       - PyMySQL
