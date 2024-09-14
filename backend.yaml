@@ -7,10 +7,11 @@
     login_host: mysql.devops-aws.tech  
 
   tasks:
-  - name: ansible install boto3 and botocore
+  - name: ansible install pymysql
     ansible.builtin.pip:
       name: 
       - PyMySQL
+      - cryptography
       executable: pip3.9
 
   - name: disable default nodejs
@@ -34,7 +35,7 @@
   - name: Create App directory
     ansible.builtin.file:
       path: /app
-      state: directory
+      state: directory # default is file so we need to specify directory to create a folder
 
   - name: download backend code
     ansible.builtin.get_url:
@@ -43,14 +44,14 @@
 
   - name: extract backend code
     ansible.builtin.unarchive:
-      src: /tmp/backend.zip #by default ansible thinks file is in ansible server
+      src: /tmp/backend.zip #by default ansible thinks that file is in ansible server
       dest: /app
       remote_src: yes #yes indicates that the file is already in remote server
   
   - name: install dependencies
     ansible.builtin.command: npm install
     args:
-      chdir: /app #will go to app directory and install dependencies
+      chdir: /app #will go to app directory and install dependencies because package.json is in this directory
 
   - name: copy backend service
     ansible.builtin.copy:
@@ -58,12 +59,12 @@
       dest: /etc/systemd/system/backend.service
 
   - name: import mysql data
-    community.mysql.mysql_db:
+    community.mysql.mysql_db: #to add or remove schemas
       login_user: root
       login_password: "{{ mysql_root_password }}"
       login_host: "{{ login_host }}"
       target: /app/schema/backend.sql
-      name: all # name should be all if state is import/dump
+      name: all # name should always be all if state is import/dump
       state: import
       
   - name: daemon reload

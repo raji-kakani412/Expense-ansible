@@ -1,4 +1,4 @@
-- name: install mysql server
+- name: mysql server configuration
   hosts: mysql
   become: yes 
   
@@ -8,7 +8,7 @@
 
 
   tasks:
-  - name: ansible install PyMySQL
+  - name: ansible to install PyMySQL dependency
     ansible.builtin.pip:
       name: 
       - PyMySQL
@@ -39,4 +39,4 @@
   
   - name: setup Mysql root password
     ansible.builtin.command: "mysql_secure_installation --set-root-pass {{ mysql_root_password}}"
-    when: mysql_info.failed is true
+    when: mysql_info.failed is true # for boolean value we use is and for string we use ==
